@@ -7,7 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +44,33 @@ fun BottleTimer(
         label = "bottleProgress"
     )
 
+    // Calculate markings (every 10ml that divides evenly into total, max 8 markings)
+    val markings = buildList {
+        // Start with 10ml intervals
+        var interval = 10
+        var count = (totalMilliliters / interval) - 1 // Exclude 0 and total
+        
+        // If we have too many markings, increase interval
+        while (count > 8) {
+            interval += 10
+            count = (totalMilliliters / interval) - 1
+        }
+        
+        // Add markings at the calculated interval
+        var current = interval
+        while (current < totalMilliliters && size < 8) {
+            add(current)
+            current += interval
+        }
+    }.let { list ->
+        // Ensure at least 1 marking if total > 10
+        if (list.isEmpty() && totalMilliliters > 10) {
+            listOf(totalMilliliters / 2)
+        } else {
+            list
+        }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -58,30 +87,74 @@ fun BottleTimer(
             modifier = Modifier
                 .width(60.dp)
                 .height(200.dp)
-                .clip(RoundedCornerShape(30.dp))
-                .border(
-                    width = 3.dp,
-                    color = activeColor.copy(alpha = 0.5f),
-                    shape = RoundedCornerShape(30.dp)
-                )
-                .background(Color.Transparent)
         ) {
-            // Milk level with flat top
+            // Bottle container with markings
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(animatedProgress)
                     .width(60.dp)
-                    .align(Alignment.BottomCenter)
-                    .clip(
-                        RoundedCornerShape(
-                            bottomStart = 30.dp,
-                            bottomEnd = 30.dp,
-                            topStart = 0.dp,
-                            topEnd = 0.dp
-                        )
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .border(
+                        width = 3.dp,
+                        color = activeColor.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(30.dp)
                     )
-                    .background(activeColor.copy(alpha = 0.3f))
-            )
+                    .background(Color.Transparent)
+            ) {
+                // Markings (drawn first, so they appear behind the milk)
+                markings.forEach { ml ->
+                    val markingProgress = ml.toFloat() / totalMilliliters.toFloat()
+                    val offsetFromBottom = 200.dp * markingProgress
+                    
+                    // Left marking line
+                    Box(
+                        modifier = Modifier
+                            .width(16.dp)
+                            .height(1.5.dp)
+                            .align(Alignment.BottomStart)
+                            .offset(y = -offsetFromBottom)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                    )
+                    
+                    // Right marking line
+                    Box(
+                        modifier = Modifier
+                            .width(16.dp)
+                            .height(1.5.dp)
+                            .align(Alignment.BottomEnd)
+                            .offset(y = -offsetFromBottom)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                    )
+                    
+                    // Label for marking (centered)
+                    Text(
+                        text = ml.toString(),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .offset(y = -offsetFromBottom + 6.dp)
+                    )
+                }
+                
+                // Milk level with flat top (drawn on top of markings)
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight(animatedProgress)
+                        .width(60.dp)
+                        .align(Alignment.BottomCenter)
+                        .clip(
+                            RoundedCornerShape(
+                                bottomStart = 30.dp,
+                                bottomEnd = 30.dp,
+                                topStart = 0.dp,
+                                topEnd = 0.dp
+                            )
+                        )
+                        .background(activeColor.copy(alpha = 0.3f))
+                )
+            }
         }
 
         Text(
