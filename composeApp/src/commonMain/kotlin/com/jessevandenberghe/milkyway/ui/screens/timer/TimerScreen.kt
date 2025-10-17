@@ -36,6 +36,7 @@ fun TimerScreen(
             title = "Feeding",
             elapsedTime = state.elapsedFeedingTime,
             isActive = state.timingStep == TimingStep.FEEDING,
+            isExpanded = state.timingStep == TimingStep.FEEDING || state.timingStep == TimingStep.IDLE,
             activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
             activeTimeColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -45,6 +46,7 @@ fun TimerScreen(
             title = "Burping",
             elapsedTime = state.elapsedBurpingTime,
             isActive = state.timingStep == TimingStep.BURPING,
+            isExpanded = state.timingStep == TimingStep.BURPING || state.timingStep == TimingStep.IDLE,
             activeContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             activeTimeColor = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 32.dp)
