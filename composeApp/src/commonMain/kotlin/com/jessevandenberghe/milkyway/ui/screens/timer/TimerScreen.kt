@@ -34,6 +34,8 @@ fun TimerScreen(
     ) {
         FeedingCard(
             elapsedTime = state.elapsedFeedingTime,
+            bottleTotalTime = state.bottleTotalTime,
+            bottleTotalMilliliters = state.bottleTotalMilliliters,
             isActive = state.timingStep == TimingStep.FEEDING,
             isExpanded = state.timingStep == TimingStep.FEEDING || state.timingStep == TimingStep.FINISHED,
             modifier = Modifier.padding(bottom = 16.dp)

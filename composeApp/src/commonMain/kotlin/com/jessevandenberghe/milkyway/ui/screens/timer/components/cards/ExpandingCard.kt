@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun ExpandingCard(
@@ -105,6 +106,8 @@ fun TimerCardPreview() {
     ) {
         FeedingCard(
             elapsedTime = Duration.ZERO,
+            bottleTotalTime = 15.minutes,
+            bottleTotalMilliliters = 120,
             isActive = true,
             isExpanded = true
         )
