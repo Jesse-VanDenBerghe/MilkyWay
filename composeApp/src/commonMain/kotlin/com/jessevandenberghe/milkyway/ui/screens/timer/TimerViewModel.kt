@@ -27,9 +27,12 @@ class TimerViewModel(
     private fun startTimer(
         step: TimingStep, updateElapsedTimeBy: (Duration) -> Unit
     ) {
-        if (_state.value.timingStep == step) return
+        if (_state.value.timingStep != step) {
+            _state.value = _state.value.copy(timingStep = step)
+        } else {
+            timerJob?.cancel()
+        }
 
-        _state.value = _state.value.copy(timingStep = step)
         timerJob = scope.launch {
             while (_state.value.timingStep == step) {
                 delay(TIMING_STEP_DELAY)
@@ -38,8 +41,8 @@ class TimerViewModel(
         }
     }
 
-    private fun stopTimer() {
-        _state.value = _state.value.copy(timingStep = TimingStep.IDLE)
+    private fun stopTimer(nextStep: TimingStep) {
+        _state.value = _state.value.copy(timingStep = nextStep)
         timerJob?.cancel()
         timerJob = null
     }
@@ -53,7 +56,7 @@ class TimerViewModel(
     }
 
     fun stopFeeding() {
-        stopTimer()
+        stopTimer(TimingStep.BURPING)
     }
 
     fun startBurping() {
@@ -65,7 +68,7 @@ class TimerViewModel(
     }
 
     fun stopBurping() {
-        stopTimer()
+        stopTimer(TimingStep.FINISHED)
     }
 
     override fun onCleared() {

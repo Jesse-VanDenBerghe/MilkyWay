@@ -3,17 +3,21 @@ package com.jessevandenberghe.milkyway.ui.screens.timer.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,6 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,7 +51,7 @@ fun TimerCard(
         targetValue = if (isExpanded) 8.dp else 4.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+            stiffness = Spring.StiffnessVeryLow
         ),
         label = "elevation"
     )
@@ -63,29 +69,33 @@ fun TimerCard(
             transitionSpec = {
                 if (targetState) {
                     // Expanding
+                    (fadeIn(animationSpec = spring(stiffness = Spring.StiffnessVeryLow)) +
+                            slideInVertically(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessVeryLow
+                                )
+                            ) { it / 2 })
+                        .togetherWith(
+                            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow)) +
+                                    slideOutVertically(
+                                        animationSpec = spring(stiffness = Spring.StiffnessLow)
+                                    ) { -it / 2 }
+                        )
+                } else {
+                    // Collapsing
                     (fadeIn(animationSpec = spring(stiffness = Spring.StiffnessLow)) +
                             slideInVertically(
                                 animationSpec = spring(
                                     dampingRatio = Spring.DampingRatioMediumBouncy,
                                     stiffness = Spring.StiffnessLow
                                 )
-                            ) { it / 2 })
-                        .togetherWith(
-                            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessMedium)) +
-                                    slideOutVertically { -it / 2 }
-                        )
-                } else {
-                    // Collapsing
-                    (fadeIn(animationSpec = spring(stiffness = Spring.StiffnessMedium)) +
-                            slideInVertically(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium
-                                )
                             ) { -it / 2 })
                         .togetherWith(
-                            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessLow)) +
-                                    slideOutVertically { it / 2 }
+                            fadeOut(animationSpec = spring(stiffness = Spring.StiffnessVeryLow)) +
+                                    slideOutVertically(
+                                        animationSpec = spring(stiffness = Spring.StiffnessVeryLow)
+                                    ) { it / 2 }
                         )
                 }
             },
@@ -93,24 +103,65 @@ fun TimerCard(
         ) { expanded ->
             if (expanded) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = title,
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(bottom = 24.dp)
                     )
 
-                    Text(
-                        text = formatTime(elapsedTime),
-                        fontSize = 36.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (isActive) activeTimeColor else MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    // Circular progress with time in center
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.size(180.dp)
+                    ) {
+                        // Calculate progress (0f to 1f for seconds within a minute)
+                        val seconds = elapsedTime.inWholeSeconds % 60
+                        val progress = seconds / 60f
+                        
+                        val animatedProgress by animateFloatAsState(
+                            targetValue = progress,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessMedium
+                            ),
+                            label = "progressAnimation"
+                        )
+
+                        // Background circle
+                        Canvas(modifier = Modifier.size(180.dp)) {
+                            drawCircle(
+                                color = Color.Gray.copy(alpha = 0.2f),
+                                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
+                            )
+                        }
+
+                        // Progress arc
+                        Canvas(modifier = Modifier.size(180.dp)) {
+                            drawArc(
+                                color = if (isActive) activeTimeColor else Color.Gray,
+                                startAngle = -90f,
+                                sweepAngle = 360f * animatedProgress,
+                                useCenter = false,
+                                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
+                            )
+                        }
+
+                        // Time text in center
+                        Text(
+                            text = formatTime(elapsedTime),
+                            fontSize = 36.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isActive) activeTimeColor else MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             } else {
                 Row(
