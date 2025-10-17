@@ -2,6 +2,7 @@ package com.jessevandenberghe.milkyway.ui.screens.timer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,10 +12,15 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class TimerViewModel : ViewModel() {
+class TimerViewModel(
+    private val coroutineScope: CoroutineScope? = null
+) : ViewModel() {
 
     private val _state = MutableStateFlow(TimerState())
     val state: StateFlow<TimerState> = _state.asStateFlow()
+
+    private val scope: CoroutineScope
+        get() = coroutineScope ?: viewModelScope
 
     private var timerJob: Job? = null
 
@@ -24,7 +30,7 @@ class TimerViewModel : ViewModel() {
         if (_state.value.timingStep == step) return
 
         _state.value = _state.value.copy(timingStep = step)
-        timerJob = viewModelScope.launch {
+        timerJob = scope.launch {
             while (_state.value.timingStep == step) {
                 delay(TIMING_STEP_DELAY)
                 updateElapsedTimeBy(TIMING_STEP_DELAY)
