@@ -2,6 +2,7 @@ package com.jessevandenberghe.milkyway.ui.screens.timer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -31,6 +35,8 @@ import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.BurpingC
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.FeedingCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SetupCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SummaryCard
+import com.jessevandenberghe.milkyway.utils.InitializeBrightnessControl
+import com.jessevandenberghe.milkyway.utils.setBrightness
 import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,20 +45,37 @@ fun TimerScreen(
     viewModel: TimerViewModel = viewModel { TimerViewModel() }
 ) {
     val state by viewModel.state.collectAsState()
+    var brightness by remember { mutableStateOf(1f) } // 0f to 1f
+    
+    // Initialize brightness control (needed for Android to get Activity context)
+    InitializeBrightnessControl()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(state.timingStep) {
-                detectVerticalDragGestures { change, dragAmount ->
+                detectDragGestures { change, dragAmount ->
                     change.consume()
-                    // Swipe up detection (dragAmount is negative when swiping up)
-                    if (dragAmount < -50 && abs(dragAmount) > 50) {
-                        viewModel.nextStep()
+                    
+                    val (x, y) = dragAmount
+                    
+                    // Horizontal drag for brightness
+                    if (abs(x) > abs(y)) {
+                        // Adjust brightness (swipe right increases, swipe left decreases)
+                        val adjustment = x / size.width.toFloat() * 0.5f
+                        brightness = (brightness + adjustment).coerceIn(0.1f, 1f)
+                        setBrightness(brightness)
                     }
-                    // Swipe down detection (dragAmount is positive when swiping down)
-                    else if (dragAmount > 50 && abs(dragAmount) > 50) {
-                        viewModel.previousStep()
+                    // Vertical drag for step navigation
+                    else {
+                        // Swipe up detection (y is negative when swiping up)
+                        if (y < -50 && abs(y) > 50) {
+                            viewModel.nextStep()
+                        }
+                        // Swipe down detection (y is positive when swiping down)
+                        else if (y > 50 && abs(y) > 50) {
+                            viewModel.previousStep()
+                        }
                     }
                 }
             },
