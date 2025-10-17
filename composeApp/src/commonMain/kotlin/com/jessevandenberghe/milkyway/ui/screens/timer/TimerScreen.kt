@@ -1,5 +1,6 @@
 package com.jessevandenberghe.milkyway.ui.screens.timer
 
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,14 +11,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.BurpingCard
-import com.jessevandenberghe.milkyway.ui.screens.timer.components.BurpingControls
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.FeedingCard
-import com.jessevandenberghe.milkyway.ui.screens.timer.components.FeedingControls
-import com.jessevandenberghe.milkyway.ui.screens.timer.components.IdleControls
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SetupCard
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +29,20 @@ fun TimerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .pointerInput(state.timingStep) {
+                detectVerticalDragGestures { change, dragAmount ->
+                    change.consume()
+                    // Swipe up detection (dragAmount is negative when swiping up)
+                    if (dragAmount < -50 && abs(dragAmount) > 50) {
+                        viewModel.nextStep()
+                    }
+                    // Swipe down detection (dragAmount is positive when swiping down)
+                    else if (dragAmount > 50 && abs(dragAmount) > 50) {
+                        viewModel.previousStep()
+                    }
+                }
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -41,7 +54,7 @@ fun TimerScreen(
             isExpanded = state.timingStep == TimingStep.SETUP,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
+
         FeedingCard(
             elapsedTime = state.elapsedFeedingTime,
             bottleTotalMilliliters = state.bottleTotalMilliliters,
@@ -57,36 +70,5 @@ fun TimerScreen(
             isExpanded = state.timingStep == TimingStep.BURPING,
             modifier = Modifier.padding(bottom = 32.dp)
         )
-
-        when (state.timingStep) {
-            TimingStep.SETUP -> {
-                IdleControls(
-                    onStartFeeding = { viewModel.startFeeding() }
-                )
-            }
-
-            TimingStep.FEEDING -> {
-                FeedingControls(
-                    onStop = { viewModel.stopFeeding() },
-                    onStartBurping = {
-                        viewModel.stopFeeding()
-                        viewModel.startBurping()
-                    }
-                )
-            }
-
-            TimingStep.BURPING -> {
-                BurpingControls(
-                    onStop = { viewModel.stopBurping() },
-                    onFinish = {
-                        viewModel.stopBurping()
-                    }
-                )
-            }
-
-            TimingStep.FINISHED -> {
-                // TODO: Show summary or navigate
-            }
-        }
     }
 }

@@ -106,6 +106,49 @@ class TimerViewModel(
         )
     }
 
+    fun nextStep() {
+        when (_state.value.timingStep) {
+            TimingStep.SETUP -> startFeeding()
+            TimingStep.FEEDING -> {
+                stopFeeding()
+                startBurping()
+            }
+            TimingStep.BURPING -> stopBurping()
+            TimingStep.FINISHED -> { /* Already at end */ }
+        }
+    }
+
+    fun previousStep() {
+        when (_state.value.timingStep) {
+            TimingStep.SETUP -> { /* Already at beginning */ }
+            TimingStep.FEEDING -> {
+                timerJob?.cancel()
+                timerJob = null
+                _state.value = _state.value.copy(
+                    timingStep = TimingStep.SETUP,
+                    elapsedFeedingTime = Duration.ZERO,
+                    bottleRemainingMilliliters = _state.value.bottleTotalMilliliters
+                )
+            }
+            TimingStep.BURPING -> {
+                timerJob?.cancel()
+                timerJob = null
+                _state.value = _state.value.copy(
+                    timingStep = TimingStep.FEEDING,
+                    elapsedBurpingTime = Duration.ZERO
+                )
+                startFeeding()
+            }
+            TimingStep.FINISHED -> {
+                _state.value = _state.value.copy(
+                    timingStep = TimingStep.BURPING,
+                    elapsedBurpingTime = Duration.ZERO
+                )
+                startBurping()
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
