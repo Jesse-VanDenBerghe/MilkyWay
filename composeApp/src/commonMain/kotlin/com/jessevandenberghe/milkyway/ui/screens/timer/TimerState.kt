@@ -8,12 +8,22 @@ import kotlin.time.Duration.Companion.minutes
 data class TimerState(
     val elapsedFeedingTime: Duration = Duration.ZERO,
     val elapsedBurpingTime: Duration = Duration.ZERO,
-    val timingStep: TimingStep = TimingStep.IDLE,
-    val bottleTotalTime: Duration = 15.minutes,
-    val bottleTotalMilliliters: Int = 120,
-    val bottleRemainingMilliliters: Int = 120
-)
+    val timingStep: TimingStep = TimingStep.SETUP,
+    val bottleTotalTime: Duration = DEFAULT_BOTTLE_TOTAL_TIME,
+    val bottleTotalMilliliters: Int = DEFAULT_BOTTLE_TOTAL_MILLILITERS,
+    val bottleRemainingMilliliters: Int = DEFAULT_BOTTLE_TOTAL_MILLILITERS,
+    val bottleTotalTimeInput: String = DEFAULT_BOTTLE_TOTAL_TIME_INPUT,
+    val bottleTotalMillilitersInput: String = DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT
+) {
+    companion object {
+        const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 120
+        const val DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT = DEFAULT_BOTTLE_TOTAL_MILLILITERS.toString()
+        val DEFAULT_BOTTLE_TOTAL_TIME = 15.minutes
+
+        val DEFAULT_BOTTLE_TOTAL_TIME_INPUT = DEFAULT_BOTTLE_TOTAL_TIME.inWholeMinutes.toString()
+    }
+}
 
 enum class TimingStep {
-    IDLE, FEEDING, BURPING, FINISHED
+    SETUP, FEEDING, BURPING, FINISHED
 }

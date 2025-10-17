@@ -12,12 +12,12 @@ import kotlin.time.Duration.Companion.seconds
 class TimerViewModelTest {
 
     @Test
-    fun initialState_isIdle() {
+    fun initialState_isSetup() {
         val viewModel = TimerViewModel()
 
         val state = viewModel.state.value
 
-        assertEquals(TimingStep.IDLE, state.timingStep)
+        assertEquals(TimingStep.SETUP, state.timingStep)
         assertEquals(0.seconds, state.elapsedFeedingTime)
         assertEquals(0.seconds, state.elapsedBurpingTime)
     }

@@ -17,6 +17,7 @@ import com.jessevandenberghe.milkyway.ui.screens.timer.components.BurpingControl
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.FeedingCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.FeedingControls
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.IdleControls
+import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SetupCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,28 +28,38 @@ fun TimerScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        SetupCard(
+            bottleTotalMillilitersInput = state.bottleTotalMillilitersInput,
+            bottleTotalTimeInput = state.bottleTotalTimeInput,
+            onBottleTotalMillilitersInputChange = { viewModel.updateBottleTotalMillilitersInput(it) },
+            onBottleTotalTimeInputChange = { viewModel.updateBottleTotalTimeInput(it) },
+            isExpanded = state.timingStep == TimingStep.SETUP,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        
         FeedingCard(
             elapsedTime = state.elapsedFeedingTime,
             bottleTotalMilliliters = state.bottleTotalMilliliters,
             bottleRemainingMilliliters = state.bottleRemainingMilliliters,
             isActive = state.timingStep == TimingStep.FEEDING,
-            isExpanded = state.timingStep == TimingStep.FEEDING || state.timingStep == TimingStep.FINISHED,
+            isExpanded = state.timingStep == TimingStep.FEEDING,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         BurpingCard(
             elapsedTime = state.elapsedBurpingTime,
             isActive = state.timingStep == TimingStep.BURPING,
-            isExpanded = state.timingStep == TimingStep.BURPING || state.timingStep == TimingStep.FINISHED,
+            isExpanded = state.timingStep == TimingStep.BURPING,
             modifier = Modifier.padding(bottom = 32.dp)
         )
 
         when (state.timingStep) {
-            TimingStep.IDLE -> {
+            TimingStep.SETUP -> {
                 IdleControls(
                     onStartFeeding = { viewModel.startFeeding() }
                 )

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class TimerViewModel(
@@ -75,6 +76,34 @@ class TimerViewModel(
 
     fun stopBurping() {
         stopTimer(TimingStep.FINISHED)
+    }
+
+    fun updateBottleTotalMilliliters(milliliters: Int) {
+        _state.value = _state.value.copy(
+            bottleTotalMilliliters = milliliters,
+            bottleRemainingMilliliters = milliliters
+        )
+    }
+
+    fun updateBottleTotalMillilitersInput(input: String) {
+        val ml = input.toIntOrNull()
+        _state.value = _state.value.copy(
+            bottleTotalMillilitersInput = input,
+            bottleTotalMilliliters = ml ?: 0,
+            bottleRemainingMilliliters = ml ?: 0
+        )
+    }
+
+    fun updateBottleTotalTime(time: Duration) {
+        _state.value = _state.value.copy(bottleTotalTime = time)
+    }
+    
+    fun updateBottleTotalTimeInput(input: String) {
+        val minutes = input.toLongOrNull()
+        _state.value = _state.value.copy(
+            bottleTotalTimeInput = input,
+            bottleTotalTime = minutes?.let { it.minutes } ?: Duration.ZERO
+        )
     }
 
     override fun onCleared() {

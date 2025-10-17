@@ -14,7 +14,7 @@ class TimerStateTest {
 
         assertEquals(0.seconds, state.elapsedFeedingTime)
         assertEquals(0.seconds, state.elapsedBurpingTime)
-        assertEquals(TimingStep.IDLE, state.timingStep)
+        assertEquals(TimingStep.SETUP, state.timingStep)
     }
 
     @Test
@@ -24,7 +24,7 @@ class TimerStateTest {
 
         assertEquals(2.minutes, newState.elapsedFeedingTime)
         assertEquals(0.seconds, newState.elapsedBurpingTime)
-        assertEquals(TimingStep.IDLE, newState.timingStep)
+        assertEquals(TimingStep.SETUP, newState.timingStep)
     }
 
     @Test
@@ -34,7 +34,7 @@ class TimerStateTest {
 
         assertEquals(0.seconds, newState.elapsedFeedingTime)
         assertEquals(30.seconds, newState.elapsedBurpingTime)
-        assertEquals(TimingStep.IDLE, newState.timingStep)
+        assertEquals(TimingStep.SETUP, newState.timingStep)
     }
 
     @Test
