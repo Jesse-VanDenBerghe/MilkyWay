@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jessevandenberghe.milkyway.ui.screens.timer.TimerState
 import kotlin.time.Duration
@@ -127,9 +128,10 @@ fun SetupCard(
                 )
 
                 Text(
-                    text = "${bottleTotalMillilitersInput}ml / ${bottleTotalTimeInput}min",
+                    text = "${bottleTotalMillilitersInput}ml\n${bottleTotalTimeInput}min",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.End,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }

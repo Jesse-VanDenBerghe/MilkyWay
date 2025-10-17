@@ -13,7 +13,10 @@ data class TimerState(
     val bottleTotalMilliliters: Int = DEFAULT_BOTTLE_TOTAL_MILLILITERS,
     val bottleRemainingMilliliters: Int = DEFAULT_BOTTLE_TOTAL_MILLILITERS,
     val bottleTotalTimeInput: String = DEFAULT_BOTTLE_TOTAL_TIME_INPUT,
-    val bottleTotalMillilitersInput: String = DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT
+    val bottleTotalMillilitersInput: String = DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT,
+    val finalBottleRemainingMilliliters: Int = 0,
+    val sessionQuality: Float = 3f,
+    val drinkingSpeed: Float = 3f
 ) {
     companion object {
         const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 120
@@ -25,5 +28,5 @@ data class TimerState(
 }
 
 enum class TimingStep {
-    SETUP, FEEDING, BURPING, FINISHED
+    SETUP, FEEDING, BURPING, SUMMARY, FINISHED
 }

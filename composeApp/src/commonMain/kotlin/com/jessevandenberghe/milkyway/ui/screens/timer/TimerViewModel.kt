@@ -75,6 +75,22 @@ class TimerViewModel(
     }
 
     fun stopBurping() {
+        stopTimer(TimingStep.SUMMARY)
+    }
+
+    fun updateFinalBottleRemainingMilliliters(milliliters: Int) {
+        _state.value = _state.value.copy(finalBottleRemainingMilliliters = milliliters)
+    }
+
+    fun updateSessionQuality(quality: Float) {
+        _state.value = _state.value.copy(sessionQuality = quality)
+    }
+
+    fun updateDrinkingSpeed(speed: Float) {
+        _state.value = _state.value.copy(drinkingSpeed = speed)
+    }
+
+    fun finishSession() {
         stopTimer(TimingStep.FINISHED)
     }
 
@@ -114,6 +130,7 @@ class TimerViewModel(
                 startBurping()
             }
             TimingStep.BURPING -> stopBurping()
+            TimingStep.SUMMARY -> finishSession()
             TimingStep.FINISHED -> { /* Already at end */ }
         }
     }
@@ -139,12 +156,16 @@ class TimerViewModel(
                 )
                 startFeeding()
             }
-            TimingStep.FINISHED -> {
+            TimingStep.SUMMARY -> {
                 _state.value = _state.value.copy(
-                    timingStep = TimingStep.BURPING,
-                    elapsedBurpingTime = Duration.ZERO
+                    timingStep = TimingStep.BURPING
                 )
                 startBurping()
+            }
+            TimingStep.FINISHED -> {
+                _state.value = _state.value.copy(
+                    timingStep = TimingStep.SUMMARY
+                )
             }
         }
     }

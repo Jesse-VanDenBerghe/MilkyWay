@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.BurpingCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.FeedingCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SetupCard
+import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SummaryCard
 import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +30,6 @@ fun TimerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
             .pointerInput(state.timingStep) {
                 detectVerticalDragGestures { change, dragAmount ->
                     change.consume()
@@ -68,6 +68,18 @@ fun TimerScreen(
             elapsedTime = state.elapsedBurpingTime,
             isActive = state.timingStep == TimingStep.BURPING,
             isExpanded = state.timingStep == TimingStep.BURPING,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        SummaryCard(
+            finalBottleRemainingMilliliters = state.finalBottleRemainingMilliliters,
+            sessionQuality = state.sessionQuality,
+            drinkingSpeed = state.drinkingSpeed,
+            onFinalBottleRemainingMillilitersChange = { viewModel.updateFinalBottleRemainingMilliliters(it) },
+            onSessionQualityChange = { viewModel.updateSessionQuality(it) },
+            onDrinkingSpeedChange = { viewModel.updateDrinkingSpeed(it) },
+            isExpanded = state.timingStep == TimingStep.SUMMARY,
+            showScores = state.timingStep == TimingStep.FINISHED,
             modifier = Modifier.padding(bottom = 32.dp)
         )
     }
