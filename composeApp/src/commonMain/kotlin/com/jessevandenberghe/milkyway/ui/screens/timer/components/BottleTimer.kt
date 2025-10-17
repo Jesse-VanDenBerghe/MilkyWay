@@ -2,7 +2,6 @@ package com.jessevandenberghe.milkyway.ui.screens.timer.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -23,41 +22,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.max
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun BottleTimer(
-    elapsedTime: Duration,
-    totalTime: Duration,
     totalMilliliters: Int,
+    remainingMilliliters: Int,
     activeColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val progress = (elapsedTime.inWholeSeconds.toFloat() / totalTime.inWholeSeconds.toFloat()).coerceIn(0f, 1f)
-    val remainingProgress = 1f - progress
-    
+    val progress = if (totalMilliliters > 0) {
+        remainingMilliliters.toFloat() / totalMilliliters.toFloat()
+    } else {
+        0f
+    }.coerceIn(0f, 1f)
+
     val animatedProgress by animateFloatAsState(
-        targetValue = remainingProgress,
+        targetValue = progress,
         animationSpec = tween(durationMillis = 300),
         label = "bottleProgress"
     )
-    
-    val remainingMl = max(0, (totalMilliliters * animatedProgress).toInt())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
-            text = "${remainingMl}ml",
+            text = "${remainingMilliliters}ml",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = activeColor,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         Box(
             modifier = Modifier
                 .width(60.dp)
@@ -87,7 +83,7 @@ fun BottleTimer(
                     .background(activeColor.copy(alpha = 0.3f))
             )
         }
-        
+
         Text(
             text = "0ml",
             fontSize = 14.sp,

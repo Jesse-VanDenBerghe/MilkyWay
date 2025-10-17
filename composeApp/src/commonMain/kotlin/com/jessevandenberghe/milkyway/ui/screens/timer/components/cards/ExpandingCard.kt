@@ -106,8 +106,8 @@ fun TimerCardPreview() {
     ) {
         FeedingCard(
             elapsedTime = Duration.ZERO,
-            bottleTotalTime = 15.minutes,
             bottleTotalMilliliters = 120,
+            bottleRemainingMilliliters = 120,
             isActive = true,
             isExpanded = true
         )

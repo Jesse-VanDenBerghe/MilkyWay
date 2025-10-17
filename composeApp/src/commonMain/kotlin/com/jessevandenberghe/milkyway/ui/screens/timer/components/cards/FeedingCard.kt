@@ -21,8 +21,8 @@ import kotlin.time.Duration
 @Composable
 fun FeedingCard(
     elapsedTime: Duration,
-    bottleTotalTime: Duration,
     bottleTotalMilliliters: Int,
+    bottleRemainingMilliliters: Int,
     isActive: Boolean,
     isExpanded: Boolean,
     modifier: Modifier = Modifier
@@ -63,9 +63,8 @@ fun FeedingCard(
                     )
 
                     BottleTimer(
-                        elapsedTime = elapsedTime,
-                        totalTime = bottleTotalTime,
                         totalMilliliters = bottleTotalMilliliters,
+                        remainingMilliliters = bottleRemainingMilliliters,
                         activeColor = MaterialTheme.colorScheme.primary
                     )
                 }

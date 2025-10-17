@@ -49,8 +49,14 @@ class TimerViewModel(
 
     fun startFeeding() {
         startTimer(TimingStep.FEEDING) {
+            val newElapsedTime = _state.value.elapsedFeedingTime + it
+            val progress = (newElapsedTime.inWholeSeconds.toFloat() / _state.value.bottleTotalTime.inWholeSeconds.toFloat()).coerceIn(0f, 1f)
+            val remainingProgress = 1f - progress
+            val remainingMl = kotlin.math.max(0, (_state.value.bottleTotalMilliliters * remainingProgress).toInt())
+            
             _state.value = _state.value.copy(
-                elapsedFeedingTime = _state.value.elapsedFeedingTime + it
+                elapsedFeedingTime = newElapsedTime,
+                bottleRemainingMilliliters = remainingMl
             )
         }
     }

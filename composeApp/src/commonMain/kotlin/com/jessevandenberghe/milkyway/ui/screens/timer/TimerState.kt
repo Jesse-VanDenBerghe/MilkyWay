@@ -10,7 +10,8 @@ data class TimerState(
     val elapsedBurpingTime: Duration = Duration.ZERO,
     val timingStep: TimingStep = TimingStep.IDLE,
     val bottleTotalTime: Duration = 15.minutes,
-    val bottleTotalMilliliters: Int = 120
+    val bottleTotalMilliliters: Int = 120,
+    val bottleRemainingMilliliters: Int = 120
 )
 
 enum class TimingStep {
