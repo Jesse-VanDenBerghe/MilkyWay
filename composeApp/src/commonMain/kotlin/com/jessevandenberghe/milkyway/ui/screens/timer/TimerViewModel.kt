@@ -53,6 +53,11 @@ class TimerViewModel(
     }
 
     fun startFeeding() {
+        // Capture start time when transitioning to feeding
+        if (_state.value.sessionStartTime == 0L) {
+            _state.value = _state.value.copy(sessionStartTime = System.currentTimeMillis())
+        }
+        
         startTimer(TimingStep.FEEDING) {
             val newElapsedTime = _state.value.elapsedFeedingTime + it
             val progress = (newElapsedTime.inWholeSeconds.toFloat() / _state.value.bottleTotalTime.inWholeSeconds.toFloat()).coerceIn(0f, 1f)
@@ -102,6 +107,7 @@ class TimerViewModel(
         scope.launch {
             val milkConsumed = _state.value.bottleTotalMilliliters - _state.value.finalBottleRemainingMilliliters
             val session = FeedingSession(
+                timestamp = _state.value.sessionStartTime,
                 elapsedFeedingTime = _state.value.elapsedFeedingTime,
                 elapsedBurpingTime = _state.value.elapsedBurpingTime,
                 bottleTotalMilliliters = _state.value.bottleTotalMilliliters,

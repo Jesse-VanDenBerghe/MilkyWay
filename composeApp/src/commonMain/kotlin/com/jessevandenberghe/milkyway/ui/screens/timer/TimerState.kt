@@ -16,7 +16,8 @@ data class TimerState(
     val bottleTotalMillilitersInput: String = DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT,
     val finalBottleRemainingMilliliters: Int = 0,
     val sessionQuality: Float = 3f,
-    val drinkingSpeed: Float = 3f
+    val drinkingSpeed: Float = 3f,
+    val sessionStartTime: Long = 0L
 ) {
     companion object {
         const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 120
