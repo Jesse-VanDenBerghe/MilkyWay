@@ -19,26 +19,41 @@ fun TimelineSeparator(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Vertical line
+        // Left line
         Box(
             modifier = Modifier
-                .width(3.dp)
-                .height(60.dp)
+                .weight(1f)
+                .height(2.dp)
                 .background(MaterialTheme.colorScheme.outlineVariant)
-                .padding(start = 20.5.dp)
         )
 
-        // Time difference text
-        Spacer(modifier = Modifier.width(16.dp))
+        // Time difference badge
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = MaterialTheme.shapes.small
+                )
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = "⏱ ${formatTimeDifference(timeDifference)}",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
         
-        Text(
-            text = formatTimeDifference(timeDifference),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        // Right line
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .height(2.dp)
+                .background(MaterialTheme.colorScheme.outlineVariant)
         )
     }
 }
