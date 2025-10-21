@@ -19,52 +19,44 @@ import kotlinx.datetime.toLocalDateTime
 fun TimelineItem(
     session: FeedingSession,
     isFirst: Boolean = false,
-    isLast: Boolean = false
+    isLast: Boolean = false,
+    timelineLineHeight: Int = 80
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         // Timeline column with dot and line
-        Column(
-            modifier = Modifier.width(40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier
+                .width(50.dp)
+                .height(timelineLineHeight.dp),
+            contentAlignment = Alignment.TopCenter
         ) {
-            if (!isFirst) {
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(16.dp)
-                        .background(MaterialTheme.colorScheme.outlineVariant)
-                )
-            }
+            // Vertical line
+            Box(
+                modifier = Modifier
+                    .width(2.dp)
+                    .height(timelineLineHeight.dp)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
+            )
 
             // Timeline dot
             Box(
                 modifier = Modifier
-                    .size(12.dp)
+                    .size(14.dp)
                     .background(
                         color = MaterialTheme.colorScheme.primary,
                         shape = CircleShape
                     )
+                    .align(Alignment.TopCenter)
             )
-
-            if (!isLast) {
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(16.dp)
-                        .background(MaterialTheme.colorScheme.outlineVariant)
-                )
-            }
         }
 
         // Content
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = if (isFirst) 0.dp else 8.dp, bottom = if (isLast) 0.dp else 8.dp)
+                .padding(start = 16.dp, end = 16.dp)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = RoundedCornerShape(12.dp)

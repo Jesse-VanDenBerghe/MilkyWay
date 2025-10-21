@@ -64,7 +64,8 @@ fun TimelineScreen(
                     TimelineItem(
                         session = session,
                         isFirst = index == 0,
-                        isLast = index == state.sessions.size - 1
+                        isLast = index == state.sessions.size - 1,
+                        timelineLineHeight = 100
                     )
                 }
             }
