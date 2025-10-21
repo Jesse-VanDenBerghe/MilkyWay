@@ -51,13 +51,13 @@ class TimerViewModelTest {
     }
 
     @Test
-    fun stopBurping_changesStateToSummary() {
+    fun stopBurping_changesStateToFinished() {
         val viewModel = TimerViewModel()
         viewModel.startBurping()
 
         viewModel.stopBurping()
 
-        assertEquals(TimingStep.SUMMARY, viewModel.state.value.timingStep)
+        assertEquals(TimingStep.FINISHED, viewModel.state.value.timingStep)
     }
 
     @Test
