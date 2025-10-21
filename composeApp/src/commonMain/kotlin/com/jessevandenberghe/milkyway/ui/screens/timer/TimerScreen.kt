@@ -47,6 +47,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimerScreen(
+    onBack: () -> Unit = {},
     viewModel: TimerViewModel = viewModel { TimerViewModel() }
 ) {
     val state by viewModel.state.collectAsState()
@@ -198,7 +199,10 @@ fun TimerScreen(
                         Spacer(modifier = Modifier.height(32.dp))
 
                         Button(
-                            onClick = { viewModel.saveSession() },
+                            onClick = {
+                                viewModel.saveSession()
+                                onBack()
+                            },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Save Session")

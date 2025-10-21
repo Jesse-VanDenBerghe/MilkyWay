@@ -3,6 +3,7 @@ package com.jessevandenberghe.milkyway.ui.screens.timeline
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import com.jessevandenberghe.milkyway.ui.screens.timeline.components.TimelineIte
 
 @Composable
 fun TimelineScreen(
+    onStartSession: () -> Unit = {},
     viewModel: TimelineViewModel = viewModel {
         TimelineViewModel(SessionRepository())
     }
@@ -22,23 +24,32 @@ fun TimelineScreen(
     val state by viewModel.state.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        // Header
-        Text(
-            text = "Feeding Timeline",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
+        // Header with button
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Feeding Timeline",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Button(onClick = onStartSession) {
+                Text("Start Session")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Timeline content
         if (state.sessions.isEmpty()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
