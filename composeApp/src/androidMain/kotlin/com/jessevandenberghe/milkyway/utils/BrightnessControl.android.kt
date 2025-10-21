@@ -14,7 +14,7 @@ actual fun InitializeBrightnessControl() {
 actual fun setBrightness(brightness: Float) {
     currentActivity?.let { activity ->
         val layoutParams = activity.window.attributes
-        layoutParams.screenBrightness = brightness.coerceIn(0.1f, 1f)
+        layoutParams.screenBrightness = brightness.coerceIn(0.0f, 1f)
         activity.window.attributes = layoutParams
     }
 }
