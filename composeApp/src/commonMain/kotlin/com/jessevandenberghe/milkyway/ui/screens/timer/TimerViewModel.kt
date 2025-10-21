@@ -85,7 +85,7 @@ class TimerViewModel(
     }
 
     fun stopBurping() {
-        stopTimer(TimingStep.FINISHED)
+        stopTimer(TimingStep.SUMMARY)
     }
 
     fun updateFinalBottleRemainingMilliliters(milliliters: Int) {
@@ -172,7 +172,7 @@ class TimerViewModel(
                 startBurping()
             }
             TimingStep.BURPING -> stopBurping()
-            TimingStep.SUMMARY -> { /* Summary can be skipped */ }
+            TimingStep.SUMMARY -> finishSession()
             TimingStep.FINISHED -> { /* Already at end */ }
         }
     }
@@ -206,9 +206,8 @@ class TimerViewModel(
             }
             TimingStep.FINISHED -> {
                 _state.value = _state.value.copy(
-                    timingStep = TimingStep.BURPING
+                    timingStep = TimingStep.SUMMARY
                 )
-                startBurping()
             }
         }
     }
