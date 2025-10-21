@@ -37,6 +37,7 @@ import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.BurpingC
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.FeedingCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SetupCard
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SummaryCard
+import com.jessevandenberghe.milkyway.utils.HandleSystemBackButton
 import com.jessevandenberghe.milkyway.utils.InitializeBrightnessControl
 import com.jessevandenberghe.milkyway.utils.setBrightness
 import kotlin.math.abs
@@ -56,6 +57,17 @@ fun TimerScreen(
 
     // Initialize brightness control (needed for Android to get Activity context)
     InitializeBrightnessControl()
+    
+    // Handle system back button
+    HandleSystemBackButton(
+        onBack = {
+            if (state.timingStep == TimingStep.SETUP) {
+                onBack()
+            } else {
+                viewModel.previousStep()
+            }
+        }
+    )
 
     LaunchedEffect(Unit) {
         while (true) {
