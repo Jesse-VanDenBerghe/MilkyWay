@@ -15,10 +15,13 @@ data class TimerState(
     val bottleTotalTimeInput: String = DEFAULT_BOTTLE_TOTAL_TIME_INPUT,
     val bottleTotalMillilitersInput: String = DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT,
     val finalBottleRemainingMilliliters: Int = 0,
+    val finalBottleRemainingMillilitersInput: String = "",
     val sessionQuality: Float = 3f,
     val drinkingSpeed: Float = 3f,
     val sessionStartTime: Long = 0L
 ) {
+    val milkConsumed: Int
+        get() = bottleTotalMilliliters - finalBottleRemainingMilliliters
     companion object {
         const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 120
         const val DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT = DEFAULT_BOTTLE_TOTAL_MILLILITERS.toString()

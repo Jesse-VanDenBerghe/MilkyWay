@@ -11,9 +11,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jessevandenberghe.milkyway.data.model.FeedingSession
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import com.jessevandenberghe.milkyway.ui.utils.formatTime
 
 @Composable
 fun TimelineItem(
@@ -59,10 +57,8 @@ fun TimelineItem(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            val startInstant = Instant.fromEpochMilliseconds(session.timestamp)
-                            val startDateTime = startInstant.toLocalDateTime(TimeZone.currentSystemDefault())
                             Text(
-                                text = startDateTime.hour.toString().padStart(2, '0') + ":" + startDateTime.minute.toString().padStart(2, '0'),
+                                text = formatTime(session.timestamp),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -72,10 +68,8 @@ fun TimelineItem(
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            val endInstant = Instant.fromEpochMilliseconds(session.endTime)
-                            val endDateTime = endInstant.toLocalDateTime(TimeZone.currentSystemDefault())
                             Text(
-                                text = endDateTime.hour.toString().padStart(2, '0') + ":" + endDateTime.minute.toString().padStart(2, '0'),
+                                text = formatTime(session.endTime),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant

@@ -41,7 +41,10 @@ import com.jessevandenberghe.milkyway.ui.screens.timer.components.cards.SummaryC
 import com.jessevandenberghe.milkyway.utils.HandleSystemBackButton
 import com.jessevandenberghe.milkyway.utils.InitializeBrightnessControl
 import com.jessevandenberghe.milkyway.utils.setBrightness
-import kotlin.math.abs
+import com.jessevandenberghe.milkyway.ui.utils.handleHorizontalSwipe
+import com.jessevandenberghe.milkyway.ui.utils.isHorizontalDrag
+import com.jessevandenberghe.milkyway.ui.utils.isSwipeUp
+import com.jessevandenberghe.milkyway.ui.utils.isSwipeDown
 
 import com.jessevandenberghe.milkyway.ui.screens.timer.components.BrightnessSlider
 import kotlinx.coroutines.delay
@@ -94,28 +97,29 @@ fun TimerScreen(
                     detectDragGestures { change, dragAmount ->
                         change.consume()
 
-                        val (x, y) = dragAmount
-
                         // Horizontal drag for brightness
-                        if (abs(x) > abs(y)) {
-                            isAdjustingBrightness = true
-                            // Adjust brightness (swipe right increases, swipe left decreases)
-                            val adjustment = x / size.width.toFloat() * 0.5f
-                            brightness = (brightness + adjustment).coerceIn(0.0f, 1f)
-                            setBrightness(brightness * brightness)
+                        if (isHorizontalDrag(dragAmount)) {
+                            handleHorizontalSwipe(
+                                dragAmount = dragAmount,
+                                size = size,
+                                currentBrightness = brightness,
+                                onBrightnessChange = { newBrightness ->
+                                    brightness = newBrightness
+                                    setBrightness(brightness * brightness)
+                                },
+                                onStartAdjusting = { isAdjustingBrightness = true }
+                            )
                         }
                         // Vertical drag for step navigation
                         else {
-                            // Swipe up detection (y is negative when swiping up)
-                            if (y < -50 && abs(y) > 50) {
-                                viewModel.nextStep()
-                            }
-                            // Swipe down detection (y is positive when swiping down)
-                            else if (y > 50 && abs(y) > 50) {
-                                if (state.timingStep == TimingStep.SETUP) {
-                                    onBack()
-                                } else {
-                                    viewModel.previousStep()
+                            when {
+                                isSwipeUp(dragAmount) -> viewModel.nextStep()
+                                isSwipeDown(dragAmount) -> {
+                                    if (state.timingStep == TimingStep.SETUP) {
+                                        onBack()
+                                    } else {
+                                        viewModel.previousStep()
+                                    }
                                 }
                             }
                         }
@@ -151,10 +155,11 @@ fun TimerScreen(
             )
 
             SummaryCard(
+                finalBottleRemainingMillilitersInput = state.finalBottleRemainingMillilitersInput,
                 finalBottleRemainingMilliliters = state.finalBottleRemainingMilliliters,
                 sessionQuality = state.sessionQuality,
                 drinkingSpeed = state.drinkingSpeed,
-                onFinalBottleRemainingMillilitersChange = { viewModel.updateFinalBottleRemainingMilliliters(it) },
+                onFinalBottleRemainingMillilitersInputChange = { viewModel.updateFinalBottleRemainingMillilitersInput(it) },
                 onSessionQualityChange = { viewModel.updateSessionQuality(it) },
                 onDrinkingSpeedChange = { viewModel.updateDrinkingSpeed(it) },
                 isExpanded = state.timingStep == TimingStep.SUMMARY,
@@ -199,8 +204,6 @@ fun TimerScreen(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        val milkConsumed = state.bottleTotalMilliliters - (state.finalBottleRemainingMilliliters?.toString()?.toIntOrNull() ?: 0)
-
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
@@ -228,7 +231,7 @@ fun TimerScreen(
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "$milkConsumed ml",
+                                    text = "${state.milkConsumed} ml",
                                     style = MaterialTheme.typography.displaySmall,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.primary

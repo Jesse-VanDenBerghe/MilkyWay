@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -55,7 +56,7 @@ class TimerViewModel(
     fun startFeeding() {
         // Capture start time when transitioning to feeding
         if (_state.value.sessionStartTime == 0L) {
-            _state.value = _state.value.copy(sessionStartTime = System.currentTimeMillis())
+            _state.value = _state.value.copy(sessionStartTime = Clock.System.now().toEpochMilliseconds())
         }
         
         startTimer(TimingStep.FEEDING) {
@@ -90,6 +91,14 @@ class TimerViewModel(
     fun updateFinalBottleRemainingMilliliters(milliliters: Int) {
         _state.value = _state.value.copy(finalBottleRemainingMilliliters = milliliters)
     }
+    
+    fun updateFinalBottleRemainingMillilitersInput(input: String) {
+        val ml = input.toIntOrNull() ?: 0
+        _state.value = _state.value.copy(
+            finalBottleRemainingMillilitersInput = input,
+            finalBottleRemainingMilliliters = ml
+        )
+    }
 
     fun updateSessionQuality(quality: Float) {
         _state.value = _state.value.copy(sessionQuality = quality)
@@ -115,7 +124,7 @@ class TimerViewModel(
                 finalBottleRemainingMilliliters = _state.value.finalBottleRemainingMilliliters,
                 sessionQuality = _state.value.sessionQuality,
                 drinkingSpeed = _state.value.drinkingSpeed,
-                endTime = System.currentTimeMillis()
+                endTime = Clock.System.now().toEpochMilliseconds()
             )
             sessionRepository.saveSession(session)
         }

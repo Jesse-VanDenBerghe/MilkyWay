@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.jessevandenberghe.milkyway.ui.utils.formatTimeDifference
 import kotlin.time.Duration
 
 @Composable
@@ -55,23 +56,5 @@ fun TimelineSeparator(
                 .height(2.dp)
                 .background(MaterialTheme.colorScheme.outlineVariant)
         )
-    }
-}
-
-private fun formatTimeDifference(duration: Duration): String {
-    val totalSeconds = duration.inWholeSeconds
-    
-    return when {
-        totalSeconds < 60 -> "${totalSeconds}s"
-        totalSeconds < 3600 -> {
-            val minutes = totalSeconds / 60
-            val seconds = totalSeconds % 60
-            if (seconds == 0L) "${minutes}m" else "${minutes}m ${seconds}s"
-        }
-        else -> {
-            val hours = totalSeconds / 3600
-            val minutes = (totalSeconds % 3600) / 60
-            if (minutes == 0L) "${hours}h" else "${hours}h ${minutes}m"
-        }
     }
 }

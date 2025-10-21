@@ -21,10 +21,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SummaryCard(
+    finalBottleRemainingMillilitersInput: String,
     finalBottleRemainingMilliliters: Int,
     sessionQuality: Float,
     drinkingSpeed: Float,
-    onFinalBottleRemainingMillilitersChange: (Int) -> Unit,
+    onFinalBottleRemainingMillilitersInputChange: (String) -> Unit,
     onSessionQualityChange: (Float) -> Unit,
     onDrinkingSpeedChange: (Float) -> Unit,
     isExpanded: Boolean,
@@ -58,11 +59,8 @@ fun SummaryCard(
 
                 // Final bottle remaining milliliters input
                 OutlinedTextField(
-                    value = if (finalBottleRemainingMilliliters == 0) "" else finalBottleRemainingMilliliters.toString(),
-                    onValueChange = { value ->
-                        val ml = value.toIntOrNull() ?: 0
-                        onFinalBottleRemainingMillilitersChange(ml)
-                    },
+                    value = finalBottleRemainingMillilitersInput,
+                    onValueChange = onFinalBottleRemainingMillilitersInputChange,
                     label = { Text("Remaining in Bottle") },
                     placeholder = { Text("0") },
                     suffix = { Text("ml") },
