@@ -23,14 +23,15 @@ fun TimelineItem(
     timelineLineHeight: Int = 80
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top
     ) {
         // Timeline column with dot and line
         Box(
             modifier = Modifier
                 .width(50.dp)
                 .height(timelineLineHeight.dp),
-            contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.Center
         ) {
             // Vertical line
             Box(
@@ -40,7 +41,7 @@ fun TimelineItem(
                     .background(MaterialTheme.colorScheme.outlineVariant)
             )
 
-            // Timeline dot
+            // Timeline dot - centered on the line
             Box(
                 modifier = Modifier
                     .size(14.dp)
@@ -48,7 +49,7 @@ fun TimelineItem(
                         color = MaterialTheme.colorScheme.primary,
                         shape = CircleShape
                     )
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.Center)
             )
         }
 
