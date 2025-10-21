@@ -22,63 +22,9 @@ fun TimelineItem(
     isLast: Boolean = false,
     timelineLineHeight: Int = 80
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        verticalAlignment = Alignment.Top
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        // Timeline column with dot and line
-        Box(
-            modifier = Modifier
-                .width(44.dp)
-                .height(timelineLineHeight.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // Vertical line - adjust for first and last items
-            if (!(isFirst && isLast)) {
-                val lineHeight = when {
-                    isFirst -> (timelineLineHeight / 2).dp
-                    isLast -> (timelineLineHeight / 2).dp
-                    else -> timelineLineHeight.dp
-                }
-                val lineAlignment = when {
-                    isFirst -> Alignment.BottomCenter
-                    isLast -> Alignment.TopCenter
-                    else -> Alignment.Center
-                }
-
-                Box(
-                    modifier = Modifier
-                        .width(3.dp)
-                        .height(lineHeight)
-                        .background(MaterialTheme.colorScheme.outlineVariant)
-                        .align(lineAlignment)
-                )
-            }
-
-            // Timeline dot with outer ring
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = CircleShape
-                    )
-                    .align(Alignment.Center),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(10.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        )
-                )
-            }
-        }
-
         // Content Card
         Card(
             modifier = Modifier
