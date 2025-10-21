@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessevandenberghe.milkyway.data.repository.RepositoryProvider
 import com.jessevandenberghe.milkyway.ui.utils.formatTime
+import androidx.activity.compose.BackHandler
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +28,10 @@ fun EditSessionScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
+
+    BackHandler(enabled = true) {
+        onBack()
+    }
 
     Scaffold(
         topBar = {
