@@ -94,7 +94,11 @@ fun TimerScreen(
                             }
                             // Swipe down detection (y is positive when swiping down)
                             else if (y > 50 && abs(y) > 50) {
-                                viewModel.previousStep()
+                                if (state.timingStep == TimingStep.SETUP) {
+                                    onBack()
+                                } else {
+                                    viewModel.previousStep()
+                                }
                             }
                         }
                     }
