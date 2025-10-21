@@ -45,8 +45,13 @@ fun SummaryCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    text = "✨",
+                    style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
                     text = "Session Summary",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
@@ -159,9 +164,14 @@ fun SummaryCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Text(
+                    text = "✨",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(end = 12.dp)
+                )
                 Text(
                     text = "Summary",
                     style = MaterialTheme.typography.titleMedium,
@@ -170,14 +180,20 @@ fun SummaryCard(
                 )
 
                 if (showScores) {
-                    Text(
-                        text = "${finalBottleRemainingMilliliters}ml left\n" +
-                                "😊 ${sessionQuality.toInt()} • 🚀 ${drinkingSpeed.toInt()}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            text = "${finalBottleRemainingMilliliters}ml left",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "😊 ${sessionQuality.toInt()} • 🚀 ${drinkingSpeed.toInt()}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }

@@ -41,8 +41,13 @@ fun FeedingCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Feeding",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "🍼",
+                    style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Feeding Session",
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )

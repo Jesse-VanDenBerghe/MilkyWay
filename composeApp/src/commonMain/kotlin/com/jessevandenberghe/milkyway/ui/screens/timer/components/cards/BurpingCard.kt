@@ -35,8 +35,13 @@ fun BurpingCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Burping",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "💨",
+                    style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Burping Time",
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )

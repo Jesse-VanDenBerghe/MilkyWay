@@ -52,8 +52,13 @@ fun SetupCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
+                    text = "🍼",
+                    style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
                     text = "Bottle Setup",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
@@ -117,9 +122,14 @@ fun SetupCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Text(
+                    text = "🍼",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(end = 12.dp)
+                )
                 Text(
                     text = "Bottle Setup",
                     style = MaterialTheme.typography.titleMedium,
@@ -127,13 +137,20 @@ fun SetupCard(
                     modifier = Modifier.weight(1f)
                 )
 
-                Text(
-                    text = "${bottleTotalMillilitersInput}ml\n${bottleTotalTimeInput}min",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = "${bottleTotalMillilitersInput}ml",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "${bottleTotalTimeInput}min",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     )

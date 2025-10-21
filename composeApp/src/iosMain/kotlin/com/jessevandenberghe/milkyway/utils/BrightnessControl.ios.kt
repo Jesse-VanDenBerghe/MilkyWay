@@ -9,5 +9,5 @@ actual fun InitializeBrightnessControl() {
 }
 
 actual fun setBrightness(brightness: Float) {
-    UIScreen.mainScreen.brightness = brightness.coerceIn(0.1, 1.0).toDouble()
+    UIScreen.mainScreen.brightness = brightness.coerceIn(0.1f, 1.0f).toDouble()
 }
