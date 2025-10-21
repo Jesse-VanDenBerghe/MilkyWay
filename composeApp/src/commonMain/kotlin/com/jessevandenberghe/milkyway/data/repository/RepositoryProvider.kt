@@ -1,7 +1,17 @@
 package com.jessevandenberghe.milkyway.data.repository
 
 object RepositoryProvider {
-    private val _sessionRepository: ISessionRepository = SessionRepository()
+    private var _sessionRepository: ISessionRepository? = null
+    private var isInitialized = false
     
-    fun getSessionRepository(): ISessionRepository = _sessionRepository
+    fun initialize(sessionRepository: ISessionRepository) {
+        if (!isInitialized) {
+            _sessionRepository = sessionRepository
+            isInitialized = true
+        }
+    }
+    
+    fun getSessionRepository(): ISessionRepository {
+        return _sessionRepository ?: SessionRepository().also { _sessionRepository = it }
+    }
 }

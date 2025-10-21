@@ -86,7 +86,7 @@ fun TimelineItem(
                 val instant = Instant.fromEpochMilliseconds(session.timestamp)
                 val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
                 Text(
-                    text = String.format("%02d:%02d", localDateTime.hour, localDateTime.minute),
+                    text = localDateTime.hour.toString().padStart(2, '0') + ":" + localDateTime.minute.toString().padStart(2, '0'),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

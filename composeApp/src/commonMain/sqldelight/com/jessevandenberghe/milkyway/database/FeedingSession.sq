@@ -1,0 +1,26 @@
+CREATE TABLE feedingSession (
+    id TEXT PRIMARY KEY,
+    timestamp INTEGER NOT NULL,
+    elapsedFeedingTimeMillis INTEGER NOT NULL,
+    elapsedBurpingTimeMillis INTEGER NOT NULL,
+    bottleTotalMilliliters INTEGER NOT NULL,
+    milkConsumed INTEGER NOT NULL,
+    finalBottleRemainingMilliliters INTEGER NOT NULL,
+    sessionQuality REAL NOT NULL,
+    drinkingSpeed REAL NOT NULL
+);
+
+CREATE INDEX session_timestamp ON feedingSession(timestamp);
+
+selectAll:
+SELECT * FROM feedingSession ORDER BY timestamp DESC;
+
+insertSession:
+INSERT INTO feedingSession(id, timestamp, elapsedFeedingTimeMillis, elapsedBurpingTimeMillis, bottleTotalMilliliters, milkConsumed, finalBottleRemainingMilliliters, sessionQuality, drinkingSpeed)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteSession:
+DELETE FROM feedingSession WHERE id = ?;
+
+deleteAll:
+DELETE FROM feedingSession;
