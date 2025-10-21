@@ -33,12 +33,24 @@ fun TimelineItem(
                 .height(timelineLineHeight.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Vertical line
+            // Vertical line - adjust for first and last items
+            val lineHeight = when {
+                isFirst -> (timelineLineHeight / 2).dp
+                isLast -> (timelineLineHeight / 2).dp
+                else -> timelineLineHeight.dp
+            }
+            val lineAlignment = when {
+                isFirst -> Alignment.BottomCenter
+                isLast -> Alignment.TopCenter
+                else -> Alignment.Center
+            }
+
             Box(
                 modifier = Modifier
                     .width(2.dp)
-                    .height(timelineLineHeight.dp)
+                    .height(lineHeight)
                     .background(MaterialTheme.colorScheme.outlineVariant)
+                    .align(lineAlignment)
             )
 
             // Timeline dot - centered on the line
