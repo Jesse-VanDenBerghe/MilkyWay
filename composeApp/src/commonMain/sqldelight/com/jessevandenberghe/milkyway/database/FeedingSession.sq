@@ -1,6 +1,7 @@
 CREATE TABLE feedingSession (
     id TEXT PRIMARY KEY,
     timestamp INTEGER NOT NULL,
+    endTime INTEGER NOT NULL,
     elapsedFeedingTimeMillis INTEGER NOT NULL,
     elapsedBurpingTimeMillis INTEGER NOT NULL,
     bottleTotalMilliliters INTEGER NOT NULL,
@@ -16,8 +17,8 @@ selectAll:
 SELECT * FROM feedingSession ORDER BY timestamp DESC;
 
 insertSession:
-INSERT INTO feedingSession(id, timestamp, elapsedFeedingTimeMillis, elapsedBurpingTimeMillis, bottleTotalMilliliters, milkConsumed, finalBottleRemainingMilliliters, sessionQuality, drinkingSpeed)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO feedingSession(id, timestamp, endTime, elapsedFeedingTimeMillis, elapsedBurpingTimeMillis, bottleTotalMilliliters, milkConsumed, finalBottleRemainingMilliliters, sessionQuality, drinkingSpeed)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 deleteSession:
 DELETE FROM feedingSession WHERE id = ?;

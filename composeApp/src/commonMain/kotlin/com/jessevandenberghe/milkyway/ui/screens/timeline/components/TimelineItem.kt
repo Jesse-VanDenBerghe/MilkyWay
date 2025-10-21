@@ -50,22 +50,37 @@ fun TimelineItem(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "⏰",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        val instant = Instant.fromEpochMilliseconds(session.timestamp)
-                        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-                        Text(
-                            text = localDateTime.hour.toString().padStart(2, '0') + ":" + localDateTime.minute.toString().padStart(2, '0'),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    Column {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "⏰",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            val startInstant = Instant.fromEpochMilliseconds(session.timestamp)
+                            val startDateTime = startInstant.toLocalDateTime(TimeZone.currentSystemDefault())
+                            Text(
+                                text = startDateTime.hour.toString().padStart(2, '0') + ":" + startDateTime.minute.toString().padStart(2, '0'),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = " - ",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            val endInstant = Instant.fromEpochMilliseconds(session.endTime)
+                            val endDateTime = endInstant.toLocalDateTime(TimeZone.currentSystemDefault())
+                            Text(
+                                text = endDateTime.hour.toString().padStart(2, '0') + ":" + endDateTime.minute.toString().padStart(2, '0'),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
 

@@ -16,6 +16,7 @@ class DatabaseSessionRepository(private val database: MilkyWayDatabase) : ISessi
         database.feedingSessionQueries.insertSession(
             id = session.id,
             timestamp = session.timestamp,
+            endTime = session.endTime,
             elapsedFeedingTimeMillis = session.elapsedFeedingTime.inWholeMilliseconds,
             elapsedBurpingTimeMillis = session.elapsedBurpingTime.inWholeMilliseconds,
             bottleTotalMilliliters = session.bottleTotalMilliliters.toLong(),
@@ -35,6 +36,7 @@ class DatabaseSessionRepository(private val database: MilkyWayDatabase) : ISessi
                     FeedingSession(
                         id = row.id,
                         timestamp = row.timestamp,
+                        endTime = row.endTime,
                         elapsedFeedingTime = row.elapsedFeedingTimeMillis.milliseconds,
                         elapsedBurpingTime = row.elapsedBurpingTimeMillis.milliseconds,
                         bottleTotalMilliliters = row.bottleTotalMilliliters.toInt(),

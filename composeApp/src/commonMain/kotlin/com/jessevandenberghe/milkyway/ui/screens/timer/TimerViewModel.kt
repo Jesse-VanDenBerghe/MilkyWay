@@ -108,7 +108,8 @@ class TimerViewModel(
                 milkConsumed = milkConsumed,
                 finalBottleRemainingMilliliters = _state.value.finalBottleRemainingMilliliters,
                 sessionQuality = _state.value.sessionQuality,
-                drinkingSpeed = _state.value.drinkingSpeed
+                drinkingSpeed = _state.value.drinkingSpeed,
+                endTime = System.currentTimeMillis()
             )
             sessionRepository.saveSession(session)
         }

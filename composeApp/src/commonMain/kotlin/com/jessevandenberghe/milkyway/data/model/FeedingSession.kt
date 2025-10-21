@@ -6,6 +6,7 @@ import kotlin.time.Duration
 data class FeedingSession(
     val id: String = generateSessionId(),
     val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
+    val endTime: Long = Clock.System.now().toEpochMilliseconds(),
     val elapsedFeedingTime: Duration,
     val elapsedBurpingTime: Duration,
     val bottleTotalMilliliters: Int,
