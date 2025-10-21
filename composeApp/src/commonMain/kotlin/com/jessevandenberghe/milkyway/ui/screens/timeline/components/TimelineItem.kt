@@ -18,13 +18,15 @@ fun TimelineItem(
     session: FeedingSession,
     isFirst: Boolean = false,
     isLast: Boolean = false,
-    timelineLineHeight: Int = 80
+    timelineLineHeight: Int = 80,
+    onEdit: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         // Content Card
         Card(
+            onClick = onEdit,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 4.dp, end = 8.dp),

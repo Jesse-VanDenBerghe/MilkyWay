@@ -17,8 +17,13 @@ selectAll:
 SELECT * FROM feedingSession ORDER BY timestamp DESC;
 
 insertSession:
-INSERT INTO feedingSession(id, timestamp, endTime, elapsedFeedingTimeMillis, elapsedBurpingTimeMillis, bottleTotalMilliliters, milkConsumed, finalBottleRemainingMilliliters, sessionQuality, drinkingSpeed)
+INSERT OR REPLACE INTO feedingSession(id, timestamp, endTime, elapsedFeedingTimeMillis, elapsedBurpingTimeMillis, bottleTotalMilliliters, milkConsumed, finalBottleRemainingMilliliters, sessionQuality, drinkingSpeed)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSession:
+UPDATE feedingSession
+SET timestamp = ?, endTime = ?, elapsedFeedingTimeMillis = ?, elapsedBurpingTimeMillis = ?, bottleTotalMilliliters = ?, milkConsumed = ?, finalBottleRemainingMilliliters = ?, sessionQuality = ?, drinkingSpeed = ?
+WHERE id = ?;
 
 deleteSession:
 DELETE FROM feedingSession WHERE id = ?;

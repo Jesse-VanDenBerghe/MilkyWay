@@ -17,6 +17,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun TimelineScreen(
     onStartSession: () -> Unit = {},
+    onEditSession: (String) -> Unit = {},
     viewModel: TimelineViewModel = viewModel { TimelineViewModel() }
 ) {
     val state by viewModel.state.collectAsState()
@@ -107,7 +108,8 @@ fun TimelineScreen(
                         session = session,
                         isFirst = index == 0,
                         isLast = index == state.sessions.size - 1,
-                        timelineLineHeight = 120
+                        timelineLineHeight = 120,
+                        onEdit = { onEditSession(session.id) }
                     )
                     
                     // Show separator with time difference between sessions
