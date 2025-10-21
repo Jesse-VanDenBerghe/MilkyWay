@@ -22,50 +22,40 @@ fun TimelineScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Column(
+    Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Header with button
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 2.dp
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            // Header
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 2.dp
             ) {
-                Column {
-                    Text(
-                        text = "🍼",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Feeding Timeline",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                FilledTonalButton(
-                    onClick = onStartSession,
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Start Session",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Column {
+                        Text(
+                            text = "🍼",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Feeding Timeline",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
             }
-        }
 
         // Timeline content
         if (state.sessions.isEmpty()) {
@@ -123,6 +113,25 @@ fun TimelineScreen(
                     }
                 }
             }
+        }
+    }
+
+        // Floating Start Session button
+        FloatingActionButton(
+            onClick = onStartSession,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ) {
+            Text(
+                text = "Start Session",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
     }
 }
