@@ -3,6 +3,11 @@ package com.jessevandenberghe.milkyway.utils
 import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import android.provider.Settings
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.util.Log
 
 private var currentActivity: Activity? = null
 
@@ -13,8 +18,27 @@ actual fun InitializeBrightnessControl() {
 
 actual fun setBrightness(brightness: Float) {
     currentActivity?.let { activity ->
-        val layoutParams = activity.window.attributes
-        layoutParams.screenBrightness = brightness.coerceIn(0.0f, 1f)
-        activity.window.attributes = layoutParams
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Settings.System.canWrite(activity)) {
+                val brightnessValue = (brightness * 255).toInt().coerceIn(0, 255)
+                Settings.System.putInt(
+                    activity.contentResolver,
+                    Settings.System.SCREEN_BRIGHTNESS,
+                    brightnessValue
+                )
+            } else {
+                Log.d("BrightnessControl", "WRITE_SETTINGS permission not granted, opening settings")
+                val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+                intent.data = Uri.parse("package:" + activity.packageName)
+                activity.startActivity(intent)
+            }
+        } else {
+            val brightnessValue = (brightness * 255).toInt().coerceIn(0, 255)
+            Settings.System.putInt(
+                activity.contentResolver,
+                Settings.System.SCREEN_BRIGHTNESS,
+                brightnessValue
+            )
+        }
     }
 }
