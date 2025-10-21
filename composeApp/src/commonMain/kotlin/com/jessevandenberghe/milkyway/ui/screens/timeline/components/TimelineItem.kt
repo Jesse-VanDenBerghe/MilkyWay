@@ -29,7 +29,7 @@ fun TimelineItem(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, end = 12.dp),
+                .padding(start = 4.dp, end = 8.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
@@ -42,7 +42,7 @@ fun TimelineItem(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(12.dp)
             ) {
                 // Time header with icon
                 Row(

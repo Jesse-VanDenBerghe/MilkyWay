@@ -100,7 +100,7 @@ fun TimelineScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 8.dp)
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
             ) {
                 itemsIndexed(state.sessions) { index, session ->
                     TimelineItem(
