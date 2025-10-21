@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jessevandenberghe.milkyway.data.model.FeedingSession
 import com.jessevandenberghe.milkyway.data.repository.ISessionRepository
-import com.jessevandenberghe.milkyway.data.repository.SessionRepository
+import com.jessevandenberghe.milkyway.data.repository.RepositoryProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -18,7 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class TimerViewModel(
     private val coroutineScope: CoroutineScope? = null,
-    private val sessionRepository: ISessionRepository = SessionRepository()
+    private val sessionRepository: ISessionRepository = RepositoryProvider.getSessionRepository()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(TimerState())

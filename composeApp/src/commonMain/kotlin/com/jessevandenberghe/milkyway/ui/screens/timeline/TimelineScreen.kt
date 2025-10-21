@@ -11,15 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.jessevandenberghe.milkyway.data.repository.SessionRepository
 import com.jessevandenberghe.milkyway.ui.screens.timeline.components.TimelineItem
 
 @Composable
 fun TimelineScreen(
     onStartSession: () -> Unit = {},
-    viewModel: TimelineViewModel = viewModel {
-        TimelineViewModel(SessionRepository())
-    }
+    viewModel: TimelineViewModel = viewModel { TimelineViewModel() }
 ) {
     val state by viewModel.state.collectAsState()
 
