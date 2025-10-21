@@ -120,6 +120,12 @@ class TimerViewModel(
             sessionRepository.saveSession(session)
         }
     }
+    
+    fun resetSession() {
+        timerJob?.cancel()
+        timerJob = null
+        _state.value = TimerState()
+    }
 
     fun updateBottleTotalMilliliters(milliliters: Int) {
         _state.value = _state.value.copy(

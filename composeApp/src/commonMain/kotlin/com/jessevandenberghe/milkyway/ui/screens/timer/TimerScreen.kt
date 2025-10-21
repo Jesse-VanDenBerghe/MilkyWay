@@ -56,6 +56,11 @@ fun TimerScreen(
     var brightness by remember { mutableStateOf(1f) } // 0f to 1f
     var isAdjustingBrightness by remember { mutableStateOf(false) }
 
+    // Reset session state when screen is first shown
+    LaunchedEffect(Unit) {
+        viewModel.resetSession()
+    }
+    
     // Initialize brightness control (needed for Android to get Activity context)
     InitializeBrightnessControl()
     
