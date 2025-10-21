@@ -11,6 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessevandenberghe.milkyway.ui.screens.timeline.components.TimelineItem
+import com.jessevandenberghe.milkyway.ui.screens.timeline.components.TimelineSeparator
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun TimelineScreen(
@@ -107,6 +109,16 @@ fun TimelineScreen(
                         isLast = index == state.sessions.size - 1,
                         timelineLineHeight = 120
                     )
+                    
+                    // Show separator with time difference between sessions
+                    if (index < state.sessions.size - 1) {
+                        val nextSession = state.sessions[index + 1]
+                        val timeDifference = (session.timestamp - nextSession.timestamp).milliseconds
+                        TimelineSeparator(
+                            timeDifference = timeDifference,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }
