@@ -27,6 +27,10 @@ class DatabaseSessionRepository(private val database: MilkyWayDatabase) : ISessi
         )
     }
 
+    override suspend fun deleteSession(sessionId: String) {
+        database.feedingSessionQueries.deleteSession(sessionId)
+    }
+
     override fun getSessions(): Flow<List<FeedingSession>> {
         return database.feedingSessionQueries.selectAll()
             .asFlow()

@@ -122,4 +122,18 @@ class EditSessionViewModel(
             onSuccess()
         }
     }
+
+    fun deleteSession(onSuccess: () -> Unit) {
+        val currentSession = _state.value.session ?: return
+        
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isSaving = true)
+            
+            repository.deleteSession(currentSession.id)
+            
+            _state.value = _state.value.copy(isSaving = false)
+            
+            onSuccess()
+        }
+    }
 }

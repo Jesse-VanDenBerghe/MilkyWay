@@ -9,3 +9,10 @@ actual fun HandleSystemBackButton(onBack: () -> Unit) {
         onBack()
     }
 }
+
+@Composable
+actual fun PlatformBackHandler(enabled: Boolean, onBack: () -> Unit) {
+    BackHandler(enabled = enabled) {
+        onBack()
+    }
+}

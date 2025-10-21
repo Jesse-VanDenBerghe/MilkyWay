@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jessevandenberghe.milkyway.data.repository.RepositoryProvider
 import com.jessevandenberghe.milkyway.ui.utils.formatTime
-import androidx.activity.compose.BackHandler
+import com.jessevandenberghe.milkyway.utils.PlatformBackHandler
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,9 +28,36 @@ fun EditSessionScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-    BackHandler(enabled = true) {
+    PlatformBackHandler(enabled = true) {
         onBack()
+    }
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text("Delete Session?") },
+            text = { Text("This action cannot be undone.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDeleteConfirmation = false
+                        viewModel.deleteSession(onBack)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -57,38 +84,53 @@ fun EditSessionScreen(
             )
         },
         bottomBar = {
-            if (state.hasChanges && !state.isLoading) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 3.dp
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 3.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = onBack,
-                            modifier = Modifier.weight(1f)
+                    if (state.hasChanges && !state.isLoading) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text("Cancel")
-                        }
-                        Button(
-                            onClick = { viewModel.saveChanges(onBack) },
-                            enabled = !state.isSaving,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            if (state.isSaving) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(20.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Text("Save Changes")
+                            OutlinedButton(
+                                onClick = onBack,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Cancel")
+                            }
+                            Button(
+                                onClick = { viewModel.saveChanges(onBack) },
+                                enabled = !state.isSaving,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                if (state.isSaving) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(20.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Text("Save Changes")
+                                }
                             }
                         }
+                    }
+                    OutlinedButton(
+                        onClick = { showDeleteConfirmation = true },
+                        enabled = !state.isSaving && !state.isLoading,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("🗑️ Delete Session")
                     }
                 }
             }
