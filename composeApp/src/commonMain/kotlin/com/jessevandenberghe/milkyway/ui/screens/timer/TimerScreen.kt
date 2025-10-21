@@ -55,10 +55,14 @@ fun TimerScreen(
     // Initialize brightness control (needed for Android to get Activity context)
     InitializeBrightnessControl()
 
-    LaunchedEffect(isAdjustingBrightness) {
-        if (isAdjustingBrightness) {
-            delay(2000) // Hide after 2 seconds
-            isAdjustingBrightness = false
+    LaunchedEffect(Unit) {
+        while (true) {
+            if (isAdjustingBrightness) {
+                delay(2000) // Hide after 2 seconds
+                isAdjustingBrightness = false
+            } else {
+                delay(100) // Check periodically
+            }
         }
     }
 
