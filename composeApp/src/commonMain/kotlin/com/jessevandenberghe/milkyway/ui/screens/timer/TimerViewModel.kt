@@ -2,6 +2,9 @@ package com.jessevandenberghe.milkyway.ui.screens.timer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jessevandenberghe.milkyway.data.model.FeedingSession
+import com.jessevandenberghe.milkyway.data.repository.ISessionRepository
+import com.jessevandenberghe.milkyway.data.repository.SessionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,7 +17,8 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class TimerViewModel(
-    private val coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope? = null,
+    private val sessionRepository: ISessionRepository = SessionRepository()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(TimerState())
@@ -92,6 +96,22 @@ class TimerViewModel(
 
     fun finishSession() {
         stopTimer(TimingStep.FINISHED)
+    }
+
+    fun saveSession() {
+        scope.launch {
+            val milkConsumed = _state.value.bottleTotalMilliliters - _state.value.finalBottleRemainingMilliliters
+            val session = FeedingSession(
+                elapsedFeedingTime = _state.value.elapsedFeedingTime,
+                elapsedBurpingTime = _state.value.elapsedBurpingTime,
+                bottleTotalMilliliters = _state.value.bottleTotalMilliliters,
+                milkConsumed = milkConsumed,
+                finalBottleRemainingMilliliters = _state.value.finalBottleRemainingMilliliters,
+                sessionQuality = _state.value.sessionQuality,
+                drinkingSpeed = _state.value.drinkingSpeed
+            )
+            sessionRepository.saveSession(session)
+        }
     }
 
     fun updateBottleTotalMilliliters(milliliters: Int) {
