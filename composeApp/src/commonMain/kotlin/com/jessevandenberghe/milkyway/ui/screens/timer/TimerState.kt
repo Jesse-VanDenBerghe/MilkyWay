@@ -23,7 +23,7 @@ data class TimerState(
     val milkConsumed: Int
         get() = bottleTotalMilliliters - finalBottleRemainingMilliliters
     companion object {
-        const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 120
+        const val DEFAULT_BOTTLE_TOTAL_MILLILITERS = 130
         const val DEFAULT_BOTTLE_TOTAL_MILLILITERS_INPUT = DEFAULT_BOTTLE_TOTAL_MILLILITERS.toString()
         val DEFAULT_BOTTLE_TOTAL_TIME = 15.minutes
 
